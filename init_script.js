@@ -18,7 +18,7 @@ function setup(){
   createCanvas(400,400);
   columnas = floor(width/w);
   filas = floor(height/w);
-  frameRate(-255);
+  frameRate(5);
   for(let j = 0; j < filas; j++ ){
     for (let i = 0; i < columnas; i++) {
       let casilla = new Casilla(i,j);
@@ -26,7 +26,7 @@ function setup(){
     }
   }
   actual = tablero[0];
-  actual.onkeyup();
+ // actual.onkeyup();
 }
 
 function draw(){
