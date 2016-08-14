@@ -18,7 +18,7 @@ function setup(){
   createCanvas(400,400);
   cols = floor(width/w);
   rows = floor(height/w);
-  //frameRate(5);
+  frameRate(-255);
 
   for(var j = 0; j < rows; j++ ){
     for (var i = 0; i < cols; i++) {
@@ -105,7 +105,7 @@ function Cell(i,j){
     var x = this.i*w;
     var y = this.j*w;
     noStroke();
-    fill(0,0,255,100);
+    fill(250,0,0,175);
     rect(x,y,w,w);
 
   }
@@ -129,7 +129,7 @@ function Cell(i,j){
     }
     if(this.visited){
       noStroke();
-      fill(255,0,255,100);
+      fill(255,255,0,150);
       rect(x, y, w, w);
     }
 
