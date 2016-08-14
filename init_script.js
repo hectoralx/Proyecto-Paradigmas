@@ -26,6 +26,7 @@ function setup(){
     }
   }
   actual = tablero[0];
+  actual.onkeyup();
 }
 
 function draw(){
@@ -61,8 +62,9 @@ function indices(i,j){
 function Casilla(i,j){
   this.i = i;
   this.j = j;
-  this.paredes = [true, true, true, true];
+  this.paredes = [true, true, true, true];//Arriba, derecha, abajo, izquierda...
   this.visitado = false;
+ 
   this.revisaVecinos = function(){
     let vecinos = [];
     //es un arreglo unidimensional hay que ver
@@ -123,6 +125,53 @@ function Casilla(i,j){
       rect(x, y, w, w);
     }
   }
+
+  this.moverArriba = function(){
+    let arriba = tablero[indices(i, j-1)];
+    return (!arriba || this.paredes[0]) ? false : true;
+  }
+
+  this.moverDerecha = function(){
+    let derecha = tablero[indices(i+1, j)];
+    return (!derecha||this.paredes[1]) ? false : true;
+  } 
+
+  this.moverAbajo = function(){
+    let abajo = tablero[indices(i, j+1)];
+    return (!abajo||this.paredes[2]) ? false : true;
+  }
+
+  this.moverIzquierda = function(){
+    let izquierda = tablero[indices(i-1, j)];
+    return (!izquierda||this.paredes[3]) ? false : true;
+  }
+
+
+
+  this.onkeyup = function(e) {
+   var key = (e.keyCode) ? e.keyCode : e.which;
+
+   // arriba
+   if (key == 38 && this.moverArriba()) { 
+       actual = tablero[indices(i, j-1)];
+
+   //derecha
+   }else if (key == 39 && this.moverDerecha()) {
+       actual = tablero[indices(i+1, j)];
+   }
+   //abajo
+   else if (key == 40 && this.moverAbajo()) {
+       actual = tablero[indices(i, j+1)];
+   }
+   //izquierda
+   else if (key == 37 && this.moverIzquierda()) {
+      actual = tablero[indices(i-1, j)];
+   }
+}
+
+
+
+
 }//FinDeLaClase...
 
 function removerParedes(a, b){
@@ -145,3 +194,17 @@ function removerParedes(a, b){
   }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
