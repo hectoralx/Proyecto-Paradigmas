@@ -5,156 +5,143 @@
 
 //Recursive Backtracker Maze from the cracks
 
-var cols, rows;
-var w = 20;
-var grid = [];
+let columnas, filas;
+let w = 20;
+let tablero = [];
 
-var current;
+let actual;
 
-var stack = [];
+let stack = [];
 
 
 function setup(){
   createCanvas(400,400);
-  cols = floor(width/w);
-  rows = floor(height/w);
+  columnas = floor(width/w);
+  filas = floor(height/w);
   frameRate(-255);
-
-  for(var j = 0; j < rows; j++ ){
-    for (var i = 0; i < cols; i++) {
-      var cell = new Cell(i,j);
-      grid.push(cell);
+  for(let j = 0; j < filas; j++ ){
+    for (let i = 0; i < columnas; i++) {
+      let casilla = new Casilla(i,j);
+      tablero.push(casilla);
     }
   }
-
-  current = grid[0];
-
+  actual = tablero[0];
 }
 
 function draw(){
   background(51);
-  for(var i = 0; i < grid.length; i++){
-    grid[i].show();
+  for(let i = 0; i < tablero.length; i++){
+    tablero[i].show();
   }
-  current.visited = true;
-  current.checkNeighbors();
-  current.highlight();
+  actual.visitado = true;
+  actual.revisaVecinos();
+  actual.hightlight();
   //Paso 1
-  var next = current.checkNeighbors();
-  if(next){
-    next.visited = true;
+  let sig = actual.revisaVecinos();//sig = siguiente
+  if(sig){
+    sig.visitado = true;
     //Paso 2
-
-    stack.push(current);
-
+    stack.push(actual);
     //Paso 3
-    removeWalls(current, next);
-
+    removerParedes(actual, sig);
     //Paso 4
-    current = next;
+    actual = sig;
   }else if(stack.length > 0){
-      current = stack.pop();
-
+      actual = stack.pop();
   }
-
 }
 
-function index(i,j){
-  if(i<0 || j<0 || i > cols-1 || j > rows-1){
+function indices(i,j){
+  if(i<0 || j<0 || i > columnas-1 || j > filas-1){
     return -1;
   }
-  return i + j * cols;
-
+  return i + j * columnas;
 }
 
-function Cell(i,j){
+function Casilla(i,j){
   this.i = i;
   this.j = j;
-  this.walls = [true, true, true, true];
-  this.visited = false;
-  this.checkNeighbors = function(){
-    var neighbors = [];
+  this.paredes = [true, true, true, true];
+  this.visitado = false;
+  this.revisaVecinos = function(){
+    let vecinos = [];
     //es un arreglo unidimensional hay que ver
     //los vecinos
 
-    var top     = grid[index(i, j-1)];
-    var right   = grid[index(i+1, j)];
-    var bottom  = grid[index(i, j+1)];
-    var left    = grid[index(i-1, j)];
+    let arriba    = tablero[indices(i, j-1)];
+    let derecha   = tablero[indices(i+1, j)];
+    let abajo     = tablero[indices(i, j+1)];
+    let izquierda = tablero[indices(i-1, j)];
 
-    if(top && !top.visited){
-      neighbors.push(top);
+    if(arriba && !arriba.visitado){
+      vecinos.push(arriba);
     }
-    if(right && !right.visited){
-      neighbors.push(right);
+    if(derecha && !derecha.visitado){
+      vecinos.push(derecha);
     }
-    if(bottom && !bottom.visited){
-      neighbors.push(bottom);
+    if(abajo && !abajo.visitado){
+      vecinos.push(abajo);
     }
-    if(left && !left.visited){
-      neighbors.push(left);
+    if(izquierda && !izquierda.visitado){
+      vecinos.push(izquierda);
     }
-    if(neighbors.length > 0){
-      var r = floor(random(0, neighbors.length));
-      return neighbors[r];
+    if(vecinos.length > 0){
+      let r = floor(random(0, vecinos.length));
+      return vecinos[r];
     }else{
       return undefined;
     }
   }
-  this.highlight = function(){
+  this.hightlight = function(){
     var x = this.i*w;
     var y = this.j*w;
     noStroke();
     fill(250,0,0,175);
     rect(x,y,w,w);
-
   }
 
 
   this.show = function(){
-    var x = this.i*w;
-    var y = this.j*w;
+    let x = this.i*w;
+    let y = this.j*w;
     stroke(255);
-    if(this.walls[0]){
+    if(this.paredes[0]){
       line(x    , y    , x + w, y   );
     }
-    if(this.walls[1]){
+    if(this.paredes[1]){
       line(x + w, y    , x + w, y + w);
     }
-    if(this.walls[2]){
+    if(this.paredes[2]){
       line(x + w, y + w, x    , y + w);
     }
-    if(this.walls[3]){
+    if(this.paredes[3]){
       line(x    , y + w, x    , y    );
     }
-    if(this.visited){
+    if(this.visitado){
       noStroke();
       fill(255,255,0,150);
       rect(x, y, w, w);
     }
-
   }
+}//FinDeLaClase...
 
-
-}
-
-function removeWalls(a, b){
-  var x = a.i - b.i;
+function removerParedes(a, b){
+  let x = a.i - b.i;
   if(x === 1){
-    a.walls[3] = false;
-    b.walls[1] = false;
+    a.paredes[3] = false;
+    b.paredes[1] = false;
   }else if(x === -1){
-    a.walls[1] = false;
-    b.walls[3] = false;
+    a.paredes[1] = false;
+    b.paredes[3] = false;
   }
 
-  var y = a.j - b.j;
+  let y = a.j - b.j;
   if(y === 1){
-    a.walls[0] = false;
-    b.walls[2] = false;
+    a.paredes[0] = false;
+    b.paredes[2] = false;
   }else if(y === -1){
-    a.walls[2] = false;
-    b.walls[0] = false;
+    a.paredes[2] = false;
+    b.paredes[0] = false;
   }
 
 }
