@@ -6,7 +6,7 @@
 //Recursive Backtracker Maze from the cracks
 
 let columnas, filas;
-let w = 20;
+let w = 40;
 let tablero = [];
 
 let actual;
@@ -26,7 +26,7 @@ function setup(){
     }
   }
   actual = tablero[0];
- // actual.onkeyup();
+ actual.addEventListener
 }
 
 function draw(){
@@ -64,6 +64,8 @@ function Casilla(i,j){
   this.j = j;
   this.paredes = [true, true, true, true];//Arriba, derecha, abajo, izquierda...
   this.visitado = false;
+  this.camino = false;
+
 
   this.revisaVecinos = function(){
     let vecinos = [];
@@ -101,7 +103,14 @@ function Casilla(i,j){
     fill(250,0,0,175);
     rect(x,y,w,w);
   }
-
+  /*this.path = function(){
+    var x = this.i*w;
+    var y = this.j*w;
+    noStroke();
+    fill(0,0,250,150);
+    rect(x,y,w,w);
+  }
+*/
 
   this.show = function(){
     let x = this.i*w;
@@ -122,6 +131,11 @@ function Casilla(i,j){
     if(this.visitado){
       noStroke();
       fill(255,255,0,150);
+      rect(x, y, w, w);
+    }
+    if(this.camino){
+      noStroke();
+      fill(10,205,205,100);
       rect(x, y, w, w);
     }
   }
@@ -148,30 +162,6 @@ function Casilla(i,j){
 
 
 
-  this.onkeyup = function(e) {
-   var key = (e.keyCode) ? e.keyCode : e.which;
-
-   // arriba
-   if (key == 38 && this.moverArriba()) {
-       actual = tablero[indices(i, j-1)];
-
-   //derecha
-   }else if (key == 39 && this.moverDerecha()) {
-       actual = tablero[indices(i+1, j)];
-   }
-   //abajo
-   else if (key == 40 && this.moverAbajo()) {
-       actual = tablero[indices(i, j+1)];
-   }
-   //izquierda
-   else if (key == 37 && this.moverIzquierda()) {
-      actual = tablero[indices(i-1, j)];
-   }
-}
-
-
-
-
 }//FinDeLaClase...
 
 function removerParedes(a, b){
@@ -193,4 +183,29 @@ function removerParedes(a, b){
     b.paredes[0] = false;
   }
 
+}
+
+document.onkeyup = function(e) {
+ var key = (e.keyCode) ? e.keyCode : e.which;
+
+ // arriba
+ if (key == 38 && actual.moverArriba()) {
+     actual.camino = true;
+     actual = tablero[indices(actual.i, actual.j-1)];
+
+ //derecha
+ }else if (key == 39 && actual.moverDerecha()) {
+     actual.camino = true;
+     actual = tablero[indices(actual.i+1, actual.j)];
+ }
+ //abajo
+ else if (key == 40 && actual.moverAbajo()) {
+     actual.camino = true;
+     actual = tablero[indices(actual.i, actual.j+1)];
+ }
+ //izquierda
+ else if (key == 37 && actual.moverIzquierda()) {
+    actual.camino = true;
+    actual = tablero[indices(actual.i-1, actual.j)];
+ }
 }
