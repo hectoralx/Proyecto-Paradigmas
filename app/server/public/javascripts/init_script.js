@@ -6,12 +6,13 @@
 //Recursive Backtracker Maze from the cracks
 
 let columnas, filas;
-let w = 40;
+let w = 20;
 let tablero = [];
 
 let actual;
 
 let stack = [];
+let quesitos = 0;
 
 
 function setup(){
@@ -116,6 +117,7 @@ function Casilla(i,j){
     let x = this.i*w;
     let y = this.j*w;
     stroke(255);
+    strokeWeight(2);
     if(this.paredes[0]){
       line(x    , y    , x + w, y   );
     }
@@ -135,7 +137,7 @@ function Casilla(i,j){
     }
     if(this.camino){
       noStroke();
-      fill(10,205,205,100);
+      fill(0,0,128,150);
       rect(x, y, w, w);
     }
   }
