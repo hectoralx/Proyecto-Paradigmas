@@ -22,7 +22,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-//app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
@@ -59,10 +59,6 @@ app.use(function(err, req, res, next) {
 });
 
 
-app.get('/api', function(req, res){
-  res.send('Aleluyah...!');
-});
-
 app.listen(port);
-console.log("URL: http://localhost:8080/render");
+console.log("URL: http://localhost:8080");
 module.exports = app;
