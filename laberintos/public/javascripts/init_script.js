@@ -11,6 +11,7 @@ let tablero = [];
 
 let actual;
 
+
 let stack = [];
 let quesitos = 0;
 
@@ -27,7 +28,8 @@ function setup(){
     }
   }
   actual = tablero[0];
- actual.addEventListener
+  meta = indices(tablero.length-1);
+  actual.addEventListener
 }
 
 function draw(){
@@ -38,6 +40,7 @@ function draw(){
   actual.visitado = true;
   actual.revisaVecinos();
   actual.hightlight();
+  //meta.colMeta();
   //Paso 1
   let sig = actual.revisaVecinos();//sig = siguiente
   if(sig){
@@ -54,10 +57,10 @@ function draw(){
 }
 
 function indices(i,j){
-  if(i<0 || j<0 || i > columnas-1 || j > filas-1){
+  /*if(i<0 || j<0 || i > columnas-1 || j > filas-1)
     return -1;
-  }
-  return i + j * columnas;
+  return i + j * columnas;*/
+  return (i<0 || j<0 || i > columnas-1 || j > filas-1)?-1:(i+j*columnas);
 }
 
 function Casilla(i,j){
@@ -66,6 +69,7 @@ function Casilla(i,j){
   this.paredes = [true, true, true, true];//Arriba, derecha, abajo, izquierda...
   this.visitado = false;
   this.camino = false;
+  this.meta = false;
 
 
   this.revisaVecinos = function(){
@@ -113,6 +117,7 @@ function Casilla(i,j){
   }
 */
 
+
   this.show = function(){
     let x = this.i*w;
     let y = this.j*w;
@@ -132,12 +137,20 @@ function Casilla(i,j){
     }
     if(this.visitado){
       noStroke();
-      fill(255,255,0,150);
+      fill(255,255,0,210);
       rect(x, y, w, w);
     }
+    if(this.i == filas-1 && this.j == columnas-1)
+      this.meta =true;
+    //Este es mejor dejarlo para cuando el se auto-solucione...
     if(this.camino){
       noStroke();
       fill(0,0,128,150);
+      rect(x, y, w, w);
+    }
+    if(this.meta){
+      noStroke();
+      fill(33,22,128,250);
       rect(x, y, w, w);
     }
   }
