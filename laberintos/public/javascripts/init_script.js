@@ -8,12 +8,9 @@
 let columnas, filas;
 let w = 20;
 let tablero = [];
-
 let actual;
-
-
 let stack = [];
-let quesitos = 0;
+
 
 
 function setup(){
@@ -29,7 +26,7 @@ function setup(){
   }
   actual = tablero[0];
   meta = indices(tablero.length-1);
-  actual.addEventListener
+  //actual.addEventListener
 }
 
 function draw(){
