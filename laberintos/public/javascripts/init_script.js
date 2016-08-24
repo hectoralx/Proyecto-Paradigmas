@@ -57,30 +57,31 @@ function draw(){
 }
 
 function indices(i,j){
-  /*if(i<0 || j<0 || i > columnas-1 || j > filas-1)
-    return -1;
-  return i + j * columnas;*/
   return (i<0 || j<0 || i > columnas-1 || j > filas-1)?-1:(i+j*columnas);
 }
 
-function Casilla(i,j){
-  this.i = i;
-  this.j = j;
-  this.paredes = [true, true, true, true];//Arriba, derecha, abajo, izquierda...
-  this.visitado = false;
-  this.camino = false;
-  this.meta = false;
+class Casilla{
+
+  constructor(i,j){
+    this.i = i;
+    this.j = j;
+    this.paredes = [true, true, true, true];//Arriba, derecha, abajo, izquierda...
+    this.visitado = false;
+    this.camino = false;
+    this.meta = false;
+    this.calcCord = (a) => {return a*w}; // Calcula la coordenada
+  }
 
 
-  this.revisaVecinos = function(){
+  revisaVecinos(){
     let vecinos = [];
     //es un arreglo unidimensional hay que ver
     //los vecinos
 
-    let arriba    = tablero[indices(i, j-1)];
-    let derecha   = tablero[indices(i+1, j)];
-    let abajo     = tablero[indices(i, j+1)];
-    let izquierda = tablero[indices(i-1, j)];
+    let arriba    = tablero[indices(this.i, this.j-1)];
+    let derecha   = tablero[indices(this.i+1, this.j)];
+    let abajo     = tablero[indices(this.i, this.j+1)];
+    let izquierda = tablero[indices(this.i-1, this.j)];
 
     if(arriba && !arriba.visitado){
       vecinos.push(arriba);
@@ -94,51 +95,31 @@ function Casilla(i,j){
     if(izquierda && !izquierda.visitado){
       vecinos.push(izquierda);
     }
-    if(vecinos.length > 0){
-      let r = floor(random(0, vecinos.length));
-      return vecinos[r];
-    }else{
-      return undefined;
-    }
+    return (vecinos.length > 0)?vecinos[floor(random(0, vecinos.length))]:undefined;
   }
-  this.hightlight = function(){
-    var x = this.i*w;
-    var y = this.j*w;
+  hightlight(){
     noStroke();
-    fill(250,0,0,175);
-    rect(x,y,w,w);
+    fill(250,0,0,255);
+    rect(this.calcCord(this.i),this.calcCord(this.j),w,w);
   }
-  /*this.path = function(){
-    var x = this.i*w;
-    var y = this.j*w;
-    noStroke();
-    fill(0,0,250,150);
-    rect(x,y,w,w);
-  }
-*/
 
 
-  this.show = function(){
-    let x = this.i*w;
-    let y = this.j*w;
+  show(){
+
     stroke(255);
     strokeWeight(2);
-    if(this.paredes[0]){
-      line(x    , y    , x + w, y   );
-    }
-    if(this.paredes[1]){
-      line(x + w, y    , x + w, y + w);
-    }
-    if(this.paredes[2]){
-      line(x + w, y + w, x    , y + w);
-    }
-    if(this.paredes[3]){
-      line(x    , y + w, x    , y    );
-    }
+    if(this.paredes[0])
+      line(this.calcCord(this.i)    , this.calcCord(this.j)    , this.calcCord(this.i) + w, this.calcCord(this.j)   );
+    if(this.paredes[1])
+      line(this.calcCord(this.i) + w, this.calcCord(this.j)    , this.calcCord(this.i) + w, this.calcCord(this.j) + w);
+    if(this.paredes[2])
+      line(this.calcCord(this.i) + w, this.calcCord(this.j) + w, this.calcCord(this.i)    , this.calcCord(this.j) + w);
+    if(this.paredes[3])
+      line(this.calcCord(this.i)    , this.calcCord(this.j) + w, this.calcCord(this.i)    , this.calcCord(this.j)    );
     if(this.visitado){
       noStroke();
       fill(255,255,0,210);
-      rect(x, y, w, w);
+      rect(this.calcCord(this.i), this.calcCord(this.j), w, w);
     }
     if(this.i == filas-1 && this.j == columnas-1)
       this.meta =true;
@@ -146,32 +127,32 @@ function Casilla(i,j){
     if(this.camino){
       noStroke();
       fill(0,0,128,150);
-      rect(x, y, w, w);
+      rect(this.calcCord(this.i), this.calcCord(this.j), w, w);
     }
     if(this.meta){
       noStroke();
       fill(33,22,128,250);
-      rect(x, y, w, w);
+      rect(this.calcCord(this.i), this.calcCord(this.j), w, w);
     }
   }
 
-  this.moverArriba = function(){
-    let arriba = tablero[indices(i, j-1)];
+  moverArriba(){
+    let arriba = tablero[indices(this.i, this.j-1)];
     return (!arriba || this.paredes[0]) ? false : true;
   }
 
-  this.moverDerecha = function(){
-    let derecha = tablero[indices(i+1, j)];
+  moverDerecha(){
+    let derecha = tablero[indices(this.i+1, this.j)];
     return (!derecha||this.paredes[1]) ? false : true;
   }
 
-  this.moverAbajo = function(){
-    let abajo = tablero[indices(i, j+1)];
+  moverAbajo(){
+    let abajo = tablero[indices(this.i, this.j+1)];
     return (!abajo||this.paredes[2]) ? false : true;
   }
 
-  this.moverIzquierda = function(){
-    let izquierda = tablero[indices(i-1, j)];
+  moverIzquierda(){
+    let izquierda = tablero[indices(this.i-1, this.j)];
     return (!izquierda||this.paredes[3]) ? false : true;
   }
 
