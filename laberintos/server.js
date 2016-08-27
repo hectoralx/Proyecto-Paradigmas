@@ -17,6 +17,11 @@ app.set('view engine', 'ejs');
 //console.log FP
 let log = s => console.log(s);
 
+let mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/lbt');
+
+let Laberinto = require('./app/models/laberinto');
+
 app.use(morgan('dev'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -31,9 +36,7 @@ let router = express.Router();
 router.use((req, res, next) => {
   log('something is happening...!');
   next();
-});
-
-//create a route to access API with http://localhost/api/index.html
+})//create a route to access API with http://localhost/api/index.html
 router.get('/index.html', (req, res) => res.render('index.html'));
 
 //domain building, with /api as root access

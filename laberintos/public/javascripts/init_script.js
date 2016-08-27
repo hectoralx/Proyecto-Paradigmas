@@ -34,6 +34,7 @@ function draw(){
   background(51);
   for(let i = 0; i < tablero.length; i++){
     tablero[i].show();
+    console.log(tablero[i]);
   }
   actual.visitado = true;
   actual.revisaVecinos();
