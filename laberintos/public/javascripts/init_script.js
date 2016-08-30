@@ -12,6 +12,17 @@ let actual;
 let stack = [];
 
 
+class PArray extends Array {
+
+    range(a,b,c){
+      return Array.from({length : b - a}, (_, k) => k=c );
+    }
+
+
+}
+let vectorcitoDelPoder = new PArray();
+
+
 
 function setup(){
   createCanvas(400,400);
@@ -24,6 +35,17 @@ function setup(){
       tablero.push(casilla);
     }
   }
+
+
+let vectorcitoConEsteroides = new PArray(vectorcitoDelPoder.range(0, columnas,new Casilla(0,0)));
+log(vectorcitoConEsteroides);
+
+let asigna = (e,indx) => e.i = indx;
+
+log(vectorcitoConEsteroides.map((_,i) => asigna(vectorcitoConEsteroides[i],0)));
+
+//log(vectorcitoConEsteroides);
+
   actual = tablero[0];
   meta = indices(tablero.length-1);
   //actual.addEventListener
