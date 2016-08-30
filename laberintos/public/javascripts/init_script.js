@@ -33,7 +33,6 @@ function draw(){
   background(51);
   for(let i = 0; i < tablero.length; i++){
     tablero[i].show();
-    console.log(tablero[i]);
   }
   actual.visitado = true;
   actual.revisaVecinos();
@@ -134,6 +133,9 @@ class Casilla{
     }
   }
 
+  getMeta(){
+    return this.meta;
+  }
   moverArriba(){
     let arriba = tablero[indices(this.i, this.j-1)];
     return (!arriba || this.paredes[0]) ? false : true;
@@ -203,3 +205,51 @@ document.onkeyup = function(e) {
     actual = tablero[indices(actual.i-1, actual.j)];
  }
 }
+
+
+function autocomplete(e){
+  for(let i = 0; i < tablero.length; i++){
+    if(actual.moverArriba() && !actual.visitado){
+      actual.camino = true;
+      actual = tablero[indices(actual.i, actual.j-1)];
+      actual.visitado = true;
+    }else if (actual.moverDerecha() && !actual.visitado) {
+
+      actual.camino = true;
+      actual = tablero[indices(actual.i+1, actual.j)];
+      actual.visitado = true;
+    }else if (actual.moverAbajo() && !actual.visitado) {
+
+      actual.camino = true;
+      actual = tablero[indices(actual.i, actual.j+1)];
+      actual.visitado = true;
+    }else if (actual.moverIzquierda() && !actual.visitado) {
+
+      actual.camino = true;
+      actual = tablero[indices(actual.i-1, actual.j)];
+      actual.visitado = true;
+    }
+  }
+}
+let log = (...args) => console.log(...args);
+
+
+let toPromise = e => Promise.resolve(e);
+window.onload = () => {
+  let btn = document.getElementById("setup");
+  btn.onclick = e => toPromise(e).then(autocomplete)
+                                 .catch(log("Error...!"));
+}
+
+
+/**
+  TREMAUX
+**/
+
+// (1) No siga el mismo camino dos veces 7682 JC Engi
+
+// (2) Si llega a un cruce nuevo, no importa qué camino siga
+
+// (3) Si un camino nuevo lo lleva a un cruce viejo, o a un callejón sin salida, retroceda hasta la entrada del camino
+
+// (4) Si un camino viejo lo lleva a un cruce viejo, tome un camino nuevo, y si no lo hay, tome cualquiera
