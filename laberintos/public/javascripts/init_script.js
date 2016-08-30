@@ -181,7 +181,7 @@ function removerParedes(a, b){
 
 }
 
-document.onkeyup = function(e) {
+document.onkeydown = function(e) {
  var key = (e.keyCode) ? e.keyCode : e.which;
 
  // arriba
