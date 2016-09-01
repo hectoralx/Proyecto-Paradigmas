@@ -12,16 +12,21 @@ let actual;
 let stack = [];
 
 
+
 class PArray extends Array {
 
     range(a,b,c){
-      return Array.from({length : b - a}, (_, k) => k=c );
+      return Array.from({length : b - a}, (_, k) => k = c);
     }
+    rangeSecuence(a,b){
+      return Array.from({length : b - a}, (_, k) => k + a );
+    }
+
 
 
 }
 let vectorcitoDelPoder = new PArray();
-
+let needNumbers = new PArray();
 
 
 function setup(){
@@ -35,27 +40,29 @@ function setup(){
       tablero.push(casilla);
     }
   }
-
-
-let vectorcitoConEsteroides = new PArray(vectorcitoDelPoder.range(0, columnas,new Casilla(0,0)));
+    /*ESTE CODIGO ANTERIOR NO SE ME HA HECHO POSIBLE HACERLO FUNCIONALMENTE*/
+/*
+let vectorcitoConEsteroides = vectorcitoDelPoder.range(0, columnas,new Casilla(0,0));
 log(vectorcitoConEsteroides);
-
-let asigna = (e,indx) => e.i = indx;
-
-log(vectorcitoConEsteroides.map((_,i) => asigna(vectorcitoConEsteroides[i],0)));
-
-//log(vectorcitoConEsteroides);
-
+//log(stack);
+let asigna = (e,indx) => e[0].i = indx;
+log(vectorcitoConEsteroides.map((e,i) => e.i = needNumbers.rangeSecuence(0,columnas).reduce((_,e,i)=>(e==_)?i-1:i)));
+log(needNumbers.rangeSecuence(0,columnas));
+*/
   actual = tablero[0];
   meta = indices(tablero.length-1);
   //actual.addEventListener
 }
 
+
+
 function draw(){
   background(51);
-  for(let i = 0; i < tablero.length; i++){
+  /*for(let i = 0; i < tablero.length; i++){
     tablero[i].show();
-  }
+  }*/
+  tablero.forEach((e,i) => e.show());
+
   actual.visitado = true;
   actual.revisaVecinos();
   actual.hightlight();
@@ -89,6 +96,9 @@ class Casilla{
     this.camino = false;
     this.meta = false;
     this.calcCord = (a) => {return a*w}; // Calcula la coordenada
+  }
+  seti(i){
+    this.i = i;
   }
 
 
