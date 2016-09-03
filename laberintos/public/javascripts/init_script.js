@@ -7,24 +7,35 @@
 
 let columnas, filas;
 let w = 40;
-let tablero = [];
-let actual;
+
+//let actual = new Casilla(0,0);
 let stack = [];
 
 
 
-class PArray extends Array {
+class Tablero extends Array {
 
+    constructor(){
+      super();
+      //this.actual = this[0];
+      this.meta = this.indices(this.length-1);
+    }
     range(a,b,c){
       return Array.from({length : b - a}, (_, k) => k = c);
     }
     rangeSecuence(a,b){
       return Array.from({length : b - a}, (_, k) => k + a );
     }
-
+    indices(i,j){
+      return (i<0 || j<0 || i > columnas-1 || j > filas-1)?-1:(i+j*columnas);
+    }
 
 
 }
+
+
+let tablero = new Tablero();
+
 
 let crearTableroY = (n, m, i, j, a) =>{
 
@@ -41,12 +52,6 @@ let crearTableroX = (n, m, i, j, a) =>{
 }
 
 
-
-let vectorcitoDelPoder = new PArray();
-let needNumbers = new PArray();
-let dam = [];
-
-
 function setup(){
   createCanvas(400,400);
   columnas = floor(width/w);
@@ -54,10 +59,9 @@ function setup(){
   frameRate(-150);
 
   crearTableroX(filas,columnas,0,0,tablero);
-
-  actual = tablero[0];
-  meta = indices(tablero.length-1);
-  //actual.addEventListener
+  tablero.actual = tablero[0];
+  //meta = tablero.indices(tablero.length-1);
+  //tablero.actual.addEventListener
 }
 
 
@@ -66,28 +70,26 @@ function draw(){
   background(51);
   tablero.forEach((e,i) => e.show());
 
-  actual.visitado = true;
-  actual.revisaVecinos();
-  actual.hightlight();
+  tablero.actual.visitado = true;
+  tablero.actual.revisaVecinos();
+  tablero.actual.hightlight();
   //meta.colMeta();
   //Paso 1
-  let sig = actual.revisaVecinos();//sig = siguiente
+  let sig = tablero.actual.revisaVecinos();//sig = siguiente
   if(sig){
     sig.visitado = true;
     //Paso 2
-    stack.push(actual);
+    stack.push(tablero.actual);
     //Paso 3
-    removerParedes(actual, sig);
+    removerParedes(tablero.actual, sig);
     //Paso 4
-    actual = sig;
+    tablero.actual = sig;
   }else if(stack.length > 0){
-      actual = stack.pop();
+      tablero.actual = stack.pop();
   }
 }
 
-function indices(i,j){
-  return (i<0 || j<0 || i > columnas-1 || j > filas-1)?-1:(i+j*columnas);
-}
+
 
 class Casilla{
 
@@ -110,10 +112,10 @@ class Casilla{
     //es un arreglo unidimensional hay que ver
     //los vecinos
 
-    let arriba    = tablero[indices(this.i, this.j-1)];
-    let derecha   = tablero[indices(this.i+1, this.j)];
-    let abajo     = tablero[indices(this.i, this.j+1)];
-    let izquierda = tablero[indices(this.i-1, this.j)];
+    let arriba    = tablero[tablero.indices(this.i, this.j-1)];
+    let derecha   = tablero[tablero.indices(this.i+1, this.j)];
+    let abajo     = tablero[tablero.indices(this.i, this.j+1)];
+    let izquierda = tablero[tablero.indices(this.i-1, this.j)];
 
     if(arriba && !arriba.visitado){
       vecinos.push(arriba);
@@ -172,22 +174,22 @@ class Casilla{
     return this.meta;
   }
   moverArriba(){
-    let arriba = tablero[indices(this.i, this.j-1)];
+    let arriba = tablero[tablero.indices(this.i, this.j-1)];
     return (!arriba || this.paredes[0]) ? false : true;
   }
 
   moverDerecha(){
-    let derecha = tablero[indices(this.i+1, this.j)];
+    let derecha = tablero[tablero.indices(this.i+1, this.j)];
     return (!derecha||this.paredes[1]) ? false : true;
   }
 
   moverAbajo(){
-    let abajo = tablero[indices(this.i, this.j+1)];
+    let abajo = tablero[tablero.indices(this.i, this.j+1)];
     return (!abajo||this.paredes[2]) ? false : true;
   }
 
   moverIzquierda(){
-    let izquierda = tablero[indices(this.i-1, this.j)];
+    let izquierda = tablero[tablero.indices(this.i-1, this.j)];
     return (!izquierda||this.paredes[3]) ? false : true;
   }
 
@@ -220,49 +222,49 @@ document.onkeydown = function(e) {
  var key = (e.keyCode) ? e.keyCode : e.which;
 
  // arriba
- if (key == 38 && actual.moverArriba()) {
-     actual.camino = true;
-     actual = tablero[indices(actual.i, actual.j-1)];
+ if (key == 38 && tablero.actual.moverArriba()) {
+     tablero.actual.camino = true;
+     tablero.actual = tablero[tablero.indices(tablero.actual.i, tablero.actual.j-1)];
 
  //derecha
- }else if (key == 39 && actual.moverDerecha()) {
-     actual.camino = true;
-     actual = tablero[indices(actual.i+1, actual.j)];
+ }else if (key == 39 && tablero.actual.moverDerecha()) {
+     tablero.actual.camino = true;
+     tablero.actual = tablero[tablero.indices(tablero.actual.i+1, tablero.actual.j)];
  }
  //abajo
- else if (key == 40 && actual.moverAbajo()) {
-     actual.camino = true;
-     actual = tablero[indices(actual.i, actual.j+1)];
+ else if (key == 40 && tablero.actual.moverAbajo()) {
+     tablero.actual.camino = true;
+     tablero.actual = tablero[tablero.indices(tablero.actual.i, tablero.actual.j+1)];
  }
  //izquierda
- else if (key == 37 && actual.moverIzquierda()) {
-    actual.camino = true;
-    actual = tablero[indices(actual.i-1, actual.j)];
+ else if (key == 37 && tablero.actual.moverIzquierda()) {
+    tablero.actual.camino = true;
+    tablero.actual = tablero[tablero.indices(tablero.actual.i-1, tablero.actual.j)];
  }
 }
 
 
 function autocomplete(e){
   for(let i = 0; i < tablero.length; i++){
-    if(actual.moverArriba() && !actual.visitado){
-      actual.camino = true;
-      actual = tablero[indices(actual.i, actual.j-1)];
-      actual.visitado = true;
-    }else if (actual.moverDerecha() && !actual.visitado) {
+    if(tablero.actual.moverArriba() && !tablero.actual.visitado){
+      tablero.actual.camino = true;
+      tablero.actual = tablero[tablero.indices(tablero.actual.i, tablero.actual.j-1)];
+      tablero.actual.visitado = true;
+    }else if (tablero.actual.moverDerecha() && !tablero.actual.visitado) {
 
-      actual.camino = true;
-      actual = tablero[indices(actual.i+1, actual.j)];
-      actual.visitado = true;
-    }else if (actual.moverAbajo() && !actual.visitado) {
+      tablero.actual.camino = true;
+      tablero.actual = tablero[tablero.indices(tablero.actual.i+1, tablero.actual.j)];
+      tablero.actual.visitado = true;
+    }else if (tablero.actual.moverAbajo() && !tablero.actual.visitado) {
 
-      actual.camino = true;
-      actual = tablero[indices(actual.i, actual.j+1)];
-      actual.visitado = true;
-    }else if (actual.moverIzquierda() && !actual.visitado) {
+      tablero.actual.camino = true;
+      tablero.actual = tablero[tablero.indices(tablero.actual.i, tablero.actual.j+1)];
+      tablero.actual.visitado = true;
+    }else if (tablero.actual.moverIzquierda() && !tablero.actual.visitado) {
 
-      actual.camino = true;
-      actual = tablero[indices(actual.i-1, actual.j)];
-      actual.visitado = true;
+      tablero.actual.camino = true;
+      tablero.actual = tablero[tablero.indices(tablero.actual.i-1, tablero.actual.j)];
+      tablero.actual.visitado = true;
     }
   }
 }
