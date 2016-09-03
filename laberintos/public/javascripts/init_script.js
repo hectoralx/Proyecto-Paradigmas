@@ -6,7 +6,7 @@
 //Recursive Backtracker Maze from the cracks
 
 let columnas, filas;
-let w = 20;
+let w = 40;
 let tablero = [];
 let actual;
 let stack = [];
@@ -25,30 +25,36 @@ class PArray extends Array {
 
 
 }
+
+let crearTableroY = (n, m, i, j, a) =>{
+
+  a.push(new Casilla(j,i));
+  return j+1 < n ? crearTableroY(n, m, i, ++j, a) : a;
+
+}
+
+let crearTableroX = (n, m, i, j, a) =>{
+
+  crearTableroY(n, m, i, j, a);
+  return a.length < n*m ? crearTableroX(n, m, ++i, j, a) : a;
+
+}
+
+
+
 let vectorcitoDelPoder = new PArray();
 let needNumbers = new PArray();
+let dam = [];
 
 
 function setup(){
   createCanvas(400,400);
   columnas = floor(width/w);
   filas = floor(height/w);
-  //frameRate(-150);
-  for(let j = 0; j < filas; j++ ){
-    for (let i = 0; i < columnas; i++) {
-      let casilla = new Casilla(i,j);
-      tablero.push(casilla);
-    }
-  }
-    /*ESTE CODIGO ANTERIOR NO SE ME HA HECHO POSIBLE HACERLO FUNCIONALMENTE*/
-/*
-let vectorcitoConEsteroides = vectorcitoDelPoder.range(0, columnas,new Casilla(0,0));
-log(vectorcitoConEsteroides);
-//log(stack);
-let asigna = (e,indx) => e[0].i = indx;
-log(vectorcitoConEsteroides.map((e,i) => e.i = needNumbers.rangeSecuence(0,columnas).reduce((_,e,i)=>(e==_)?i-1:i)));
-log(needNumbers.rangeSecuence(0,columnas));
-*/
+  frameRate(-150);
+
+  crearTableroX(filas,columnas,0,0,tablero);
+
   actual = tablero[0];
   meta = indices(tablero.length-1);
   //actual.addEventListener
@@ -58,9 +64,6 @@ log(needNumbers.rangeSecuence(0,columnas));
 
 function draw(){
   background(51);
-  /*for(let i = 0; i < tablero.length; i++){
-    tablero[i].show();
-  }*/
   tablero.forEach((e,i) => e.show());
 
   actual.visitado = true;
