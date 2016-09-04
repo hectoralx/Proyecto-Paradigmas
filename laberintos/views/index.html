@@ -1,16 +1,26 @@
 <% include header.html %>
     <h1>Proyecto #1 Paradigmas de programacion</h1>
     <h1>II Ciclo, 2016<h1>
-    <BODY BGCOLOR="red" align="center">
+    <BODY BGCOLOR="red">
     <p id="demo">Laberinto</p>
-    <div>
-          Filas:<input type="text" id="Filas" value=""><br>
-          Columnas: <input type="text" id="Columnas" value=""><br>
+    <div id="game">
+        <div class="datos">
+              Filas:<input type="text" id="Filas" value="5"><br>
+              Columnas: <input type="text" id="Columnas" value="5"><br>
+              <button type="button" id="generar">Generar laberinto!</button>
+              <button id="setup">Autocompletar</button><br>
+              <button id="guardar">Guardar laberinto!</button>
+              <button id="recuperar">Recuperar laberinto!</button>
+
+        </div>
+        <div class="canvas" id="canvas">
+
+        </div>
     </div>
     <br>
     <br>
     <div>
-      <button type="button" id="generar" onclick="generar()">Generar laberinto!</button>
+
     </div>
 
 <% include footer.html %>
