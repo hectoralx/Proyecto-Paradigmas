@@ -126,7 +126,9 @@ function movimiento(e) {
  }
 
  if((tablero.buscaActual().actual == tablero[tablero.length-1].actual)){
-   alerta("Felicidades, ganaste!");
+   let audio = new Audio('/sounds/win.mp3');
+   audio.play();
+   //alerta("Felicidades, ganaste!");
  }
 }
 
