@@ -4,5 +4,6 @@ class Util{
     this.filas = 0;
     this.generate = false;
     this.stack = [];
+    this.stack2 = [];
   }
 }

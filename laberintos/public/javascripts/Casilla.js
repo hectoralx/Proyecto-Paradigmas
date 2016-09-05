@@ -1,11 +1,12 @@
 class Casilla{
 
-  constructor(i,j,Arraycito=null,_visitado=null,_camino=null,_meta=null,_actual=null){
+  constructor(i,j,Arraycito=null,_visitado=null,_camino=null,_meta=null,_actual=null,_ignorar=null){
     this.i = i;
     this.j = j;
     (Arraycito)?this.paredes = Arraycito: this.paredes = [true, true, true, true];//Arriba, derecha, abajo, izquierda...
     (_visitado)?this.visitado = _visitado: this.visitado = false;
     (_camino)?this.camino = _camino:this.camino = false;
+    (_ignorar)?this.ignorar = _ignorar : this.ignorar = false;
     (_meta)?this.meta = _meta:this.meta = false;
     (_actual)?this.actual = _actual: this.actual = false;
     this.calcCord = (a) => {return a*w}; // Calcula la coordenada
@@ -30,6 +31,56 @@ class Casilla{
       vecinos.push(izquierda);
     }
     return (vecinos.length > 0)?vecinos[floor(random(0, vecinos.length))]:undefined;
+  }
+
+  revisaVecinos2(){
+    let vecinos = [];
+
+
+    let arriba    = tablero[tablero.indices(this.i, this.j-1)];
+    let derecha   = tablero[tablero.indices(this.i+1, this.j)];
+    let abajo     = tablero[tablero.indices(this.i, this.j+1)];
+    let izquierda = tablero[tablero.indices(this.i-1, this.j)];
+
+    if(arriba && !arriba.camino && !this.paredes[0]){
+      vecinos.push(arriba);
+    }
+    if(derecha && !derecha.camino && !this.paredes[1]){
+      vecinos.push(derecha);
+    }
+    if(abajo && !abajo.camino && !this.paredes[2]){
+      vecinos.push(abajo);
+    }
+    if(izquierda && !izquierda.camino && !this.paredes[3]){
+      vecinos.push(izquierda);
+    }
+    let a = (vecinos.length > 0) ? vecinos[floor(random(0, vecinos.length))]
+                                 : undefined
+    ;
+    return a;
+  }
+
+  revisaVecinos3(){
+    let vecinos = [];
+
+    let arriba    = tablero[tablero.indices(this.i, this.j-1)];
+    let derecha   = tablero[tablero.indices(this.i+1, this.j)];
+    let abajo     = tablero[tablero.indices(this.i, this.j+1)];
+    let izquierda = tablero[tablero.indices(this.i-1, this.j)];
+
+    if(arriba && !arriba.ignorar && !this.paredes[0] && arriba.camino)
+      vecinos.push(arriba);
+    if(derecha && !derecha.ignorar && !this.paredes[1] && derecha.camino)
+      vecinos.push(derecha);
+    if(abajo && !abajo.ignorar && !this.paredes[2] && abajo.camino)
+      vecinos.push(abajo);
+    if(izquierda && !izquierda.ignorar && !this.paredes[3] && izquierda.camino)
+      vecinos.push(izquierda);
+
+    let a = (vecinos.length > 0) ? vecinos
+                                 : undefined
+    ;
+    return a;
   }
 
   hightlight(){

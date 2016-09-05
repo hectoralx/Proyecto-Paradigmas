@@ -51,6 +51,24 @@ function draw(){
   }
 }
 
+function intersecciones(e){
+  tablero.forEach((e) => {
+
+      if(e.ignorar === true){
+
+        if(e.revisaVecinos3() !== undefined){
+
+          if(e.revisaVecinos3().length > 1) {
+            console.log('Holli');
+            e.ignorar = false;
+          }else{
+            e.ignorar = true;
+          }
+      }
+    }
+  });
+}
+
 window.onload = () => {
 
   let btn = document.getElementById("setup");
@@ -58,7 +76,7 @@ window.onload = () => {
   let btnRecupera = document.getElementById("recuperar");
   let btnGuarda = document.getElementById("guardar");
   btn.onclick = e => toPromise(e).then(autocomplete)
-                                 .catch(log("Error...!"));
+                                 .then(intersecciones);
   btnGenera.onclick = e => toPromise(e).then(generar())
                                        .catch(e);
   btnRecupera.onclick = e => toPromise(e).then(recuperar("tablero"))
@@ -224,50 +242,27 @@ function recuperar(id){
 }//Model
 
 function autocomplete(e){
-  for(let i = 0; i < tablero.length; i++){
-    if(tablero.buscaActual().moverArriba() && !tablero.buscaActual().visitado){
-      tablero.buscaActual().camino = true;
+  if(tablero.buscaActual().i == util.columnas - 1
+    && tablero.buscaActual().j == util.filas - 1) return false;
+  let sig = tablero.buscaActual().revisaVecinos2();
+  tablero.buscaActual().camino = true;
+  let unvisited = 0;
+  if(sig){
+    tablero.buscaActual().actual = false;
+    sig.actual = true;
 
-      /**/
-      tablero.buscaActual().actual = false;
-      tablero[tablero.indices(tablero.buscaActual().i, tablero.buscaActual().j-1)].actual = true;
-      /**/
-
-      tablero.buscaActual().visitado = true;
-    }else if (tablero.buscaActual().moverDerecha() && !tablero.buscaActual().visitado) {
-
-      tablero.buscaActual().camino = true;
-
-      /**/
-      tablero.buscaActual().actual = false;
-      tablero[tablero.indices(tablero.buscaActual().i+1, tablero.buscaActual().j)].actual = true;
-      /**/
-
-
-      tablero.buscaActual().visitado = true;
-    }else if (tablero.buscaActual().moverAbajo() && !tablero.buscaActual().visitado) {
-
-      tablero.buscaActual().camino = true;
-
-      /**/
-      tablero.buscaActual().actual = false;
-      tablero[tablero.indices(tablero.buscaActual().i, tablero.buscaActual().j+1)].actual = true;
-      /**/
-
-      tablero.buscaActual().visitado = true;
-    }else if (tablero.buscaActual().moverIzquierda() && !tablero.buscaActual().visitado) {
-
-      tablero.buscaActual().camino = true;
-
-      /**/
-      tablero.buscaActual().actual = false;
-      tablero[tablero.indices(tablero.buscaActual().i-1, tablero.buscaActual().j)].actual = true;
-      /**/
-
-      tablero.buscaActual().visitado = true;
-    }
+    util.stack2.push(tablero.buscaActual());
+    unvisited += 1;
   }
-}//Model...
+  if(unvisited == 0){
+    tablero.buscaActual().actual = false;
+    util.stack2.pop().actual = true;
+    tablero.buscaActual().ignorar = true;
+  }
+
+  return autocomplete(e);
+}
+
 let log = (...args) => console.log(...args);//Para ver errores... Model
 let alerta = (...args) => window.alert(...args);
 
