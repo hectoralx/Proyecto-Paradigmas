@@ -52,14 +52,45 @@ function draw(){
   }
 }
 
+
+
 window.onload = () => {
+
+  function radios(){
+     let select = document.getElementById("mySelect");
+     let strUser = select.options[select.selectedIndex].value;
+
+
+    if(strUser == "Online"){
+      //console.log(e.value);
+      btnGuarda.className = "invisible";
+      btnRecupera.className = "invisible";
+      btnGuardaBD.className = "visible";
+      btnRecuperaBD.className = "visible";
+    }
+    if(strUser == "Local"){
+      btnGuardaBD.className = "invisible";
+      btnRecuperaBD.className = "invisible";
+      btnGuarda.className = "visible";
+      btnRecupera.className = "visible";
+    }
+
+  }
 
   let btn = document.getElementById("setup");
   let btnGenera = document.getElementById("generar");
   let btnRecuperaBD = document.getElementById("recuperarBD");
   let btnGuardaBD = document.getElementById("guardarBD");
+  btnRecuperaBD.className = "invisible";
+  btnGuardaBD.className = "invisible";
   let btnRecupera = document.getElementById("recuperar");
   let btnGuarda = document.getElementById("guardar");
+
+  let radioGuardaOnline = document.getElementById("showOnline");
+  let radioGuardaLocal = document.getElementById("showLocal");
+
+  let select = document.getElementById("mySelect");
+
 
 
   btn.onclick = e => toPromise(e).then(autocomplete)
@@ -79,6 +110,9 @@ window.onload = () => {
 
   btnRecupera.onclick = e => toPromise(e).then(recuperar("tablero"))
                                            .catch(e => log(e));
+
+  select.onchange = e => radios();
+
 
 }
 

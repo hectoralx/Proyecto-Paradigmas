@@ -8,6 +8,15 @@
   float: left;
   margin-right: 5px;
 }
+
+.invisible{
+  visibility : hidden;
+}
+
+.visible{
+  visibility : visible;
+}
+
 #Filas{
   float: right;
   padding-top: 2px;
