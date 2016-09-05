@@ -1,7 +1,13 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+//       ID                   nombre                           Horario
+//     115610655        Hector Carvajal Hernandez                1pm
+//     116070969      Jean Francis Abarca Bermudez               10am
+//     702240573        Junior Juárez Centeno                    1pm
+//     402200718          Fabio Campos Rojas                     1pm
 
-var casillaSchema = new Schema({
+let mongoose = require('mongoose');
+let Schema = mongoose.Schema;
+
+let casillaSchema = new Schema({
     actual: Boolean,
     i : Number,
     j : Number,
@@ -11,10 +17,10 @@ var casillaSchema = new Schema({
     meta : Boolean,
 },{_id: false});
 
-var tableroSchema = new Schema({
+let tableroSchema = new Schema({
     casillas:[casillaSchema]
 },{versionKey: false});
 
-var tableroModel = mongoose.model('tableros', tableroSchema);
+let tableroModel = mongoose.model('tableros', tableroSchema);
 
 module.exports = { tableroModel : tableroModel};
