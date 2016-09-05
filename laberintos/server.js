@@ -46,25 +46,18 @@ app.listen(port);
 log('REST-API listening at port ' + port);
 
 app.post('/api/guardar', function(req, res){
-    var objArray = req.body;
-    var lTablero = new tableroModel({
+    tableroModel.remove().then(res=>log(res)).catch(err=>log(err));
+    let objArray = req.body;
+    let lTablero = new tableroModel({
         casillas: objArray
     });
-
-    lTablero.save(function(err, data){
-        if(err) log(err);
-        else log('Saved: ',data);
-    });
-    res.send('Guardado con éxito');
+    lTablero.save().then(res.send('Guardado con éxito')).catch(err=>log(err));
 });
 
 app.get('/api/cargar', function(req, res){
-    var tableroQ;
-    tableroModel.findOne(function(err,data){
-        if(err) log(err);
-        else {
-          tableroQ = JSON.stringify(data.casillas);
-          res.send(tableroQ);
-        }
-    });
+    let query = tableroModel.findOne();
+    let p = query.exec();
+    log(p);
+    p.then(data=>res.send(JSON.stringify(data.casillas))).catch(err=>log(err));
+
 });
