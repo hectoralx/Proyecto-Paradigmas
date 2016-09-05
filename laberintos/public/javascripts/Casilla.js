@@ -105,12 +105,18 @@ class Casilla{
       fill(255,255,0,210);
       rect(this.calcCord(this.i), this.calcCord(this.j), w, w);
     }
+
     if(this.i == util.filas-1 && this.j == util.columnas-1)
       this.meta =true;
     //Este es mejor dejarlo para cuando el se auto-solucione...
     if(this.camino){
       noStroke();
       fill(0,0,128,150);
+      rect(this.calcCord(this.i), this.calcCord(this.j), w, w);
+    }
+    if(this.ignorar){
+      noStroke();
+      fill(255,255,0,210);
       rect(this.calcCord(this.i), this.calcCord(this.j), w, w);
     }
     if(this.meta){

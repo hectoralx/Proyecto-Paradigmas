@@ -1,6 +1,8 @@
 .datos {
   float: left;
-margin-right: 100px;
+  margin-right: 100px;
+  width: 332px;
+
 }
 .canvas {
   float: left;

@@ -41,6 +41,7 @@ function setup(){
 }
 
 function draw(){
+
   if(util.generate == true){
     background('red');
     tablero.forEach((e,i) => e.show());
@@ -54,17 +55,17 @@ function draw(){
 function intersecciones(e){
   tablero.forEach((e) => {
 
-      if(e.ignorar === true){
+    if(e.ignorar === true){
 
         if(e.revisaVecinos3() !== undefined){
 
           if(e.revisaVecinos3().length > 1) {
-            console.log('Holli');
+            //console.log('Holli');
             e.ignorar = false;
           }else{
             e.ignorar = true;
           }
-      }
+        }
     }
   });
 }
@@ -73,16 +74,30 @@ window.onload = () => {
 
   let btn = document.getElementById("setup");
   let btnGenera = document.getElementById("generar");
+  let btnRecuperaBD = document.getElementById("recuperarBD");
+  let btnGuardaBD = document.getElementById("guardarBD");
   let btnRecupera = document.getElementById("recuperar");
   let btnGuarda = document.getElementById("guardar");
+
+
   btn.onclick = e => toPromise(e).then(autocomplete)
                                  .then(intersecciones);
+
   btnGenera.onclick = e => toPromise(e).then(generar())
-                                       .catch(e);
-  btnRecupera.onclick = e => toPromise(e).then(recuperar("tablero"))
-                                         .catch(e);
+                                       .catch(e => log(e));
+
+  btnGuardaBD.onclick = e => toPromise(e).then(guardarBD())
+                                         .catch(e => log(e));
+
+  btnRecuperaBD.onclick = e => toPromise(e).then(recuperarBD())
+                                         .catch(e => log(e));
+
   btnGuarda.onclick = e => toPromise(e).then(guardar("tablero",tablero))
-                                       .catch(e);
+                                         .catch(e => log(e));
+
+  btnRecupera.onclick = e => toPromise(e).then(recuperar("tablero"))
+                                           .catch(e => log(e));
+
 }
 
 /////////////////////////////////////////////
@@ -108,6 +123,8 @@ function setFilasColumnas(){
 
 
 function generar(){
+
+  tablero = new Tablero();
   util.filas = controller.getFilas();
   util.columnas = controller.getColumnas();
   util.generate = (util.filas <= 40 && util.columnas <= 40)? true : false;
@@ -217,6 +234,8 @@ function guardar(id, tablero){
 
 function recuperar(id){
 
+      tablero = new Tablero();
+
       let jsonTablero = sessionStorage.getItem(id);
       let container = JSON.parse(jsonTablero);
       container.map(e => tablero.push(new Casilla(e.i,e.j,e.paredes,e.visitado,e.camino,e.meta,e.actual)));
@@ -241,9 +260,39 @@ function recuperar(id){
 
 }//Model
 
+function recuperarBD(){
+  tablero = new Tablero();
+  const url = 'http://localhost:8080/api/cargar';
+        fetch(url,{method: 'GET', headers: new Headers({'Content-Type':'application/json'})})
+                                                      .then(tableroQ=>tableroQ.json())
+                                                      .then(tab=>ctm(tab))
+                                                      .then(console.log(tablero))
+                                                      .catch(err=>console.log(err));
+
+}
+function ctm(newTablero){
+    var tabAux = [];
+    newTablero.forEach(e=>{
+      tablero.push(new Casilla(e.i,e.j,e.paredes,e.visitado,e.camino,e.meta,e.actual));
+    });
+    tablero.forEach((e)=>e.show());
+    util.generate = true;
+    setFilasColumnas();
+}
+function guardarBD(){
+
+  console.log(tablero);
+  console.log(tablero.length);
+  const url = 'http://localhost:8080/api/guardar';
+  fetch(url,{method: 'POST',
+        body: JSON.stringify(tablero), headers: new Headers({'Content-Type':'application/json'})
+                                                    }).then(response => console.log(response));
+}//Model
+
+
 function autocomplete(e){
-  if(tablero.buscaActual().i == util.columnas - 1
-    && tablero.buscaActual().j == util.filas - 1) return false;
+  if((tablero[tablero.length-1].actual == true)) return false;
+  //tablero[tablero.legnth-1]
   let sig = tablero.buscaActual().revisaVecinos2();
   tablero.buscaActual().camino = true;
   let unvisited = 0;
@@ -251,14 +300,19 @@ function autocomplete(e){
     tablero.buscaActual().actual = false;
     sig.actual = true;
 
-    util.stack2.push(tablero.buscaActual());
+    util.stack2.push(sig);
     unvisited += 1;
   }
+
   if(unvisited == 0){
+
     tablero.buscaActual().actual = false;
     util.stack2.pop().actual = true;
     tablero.buscaActual().ignorar = true;
+
+
   }
+
 
   return autocomplete(e);
 }
@@ -271,5 +325,5 @@ let toPromise = e => Promise.resolve(e);//Model
 document.onkeydown = e =>{
                      toPromise(e)
                      .then(movimiento(e))
-                     .catch(e);
+                     .catch(e => log(e));
 }
