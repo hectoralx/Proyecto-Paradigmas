@@ -188,11 +188,12 @@ function movimiento(e) {//Model?
 /*CHECKEAR SI HAY CONEXION CON LA BASE DE DATOS??*/
 
 function guardar(id, tablero){
-  const url = 'http://localhost:8080/api/guardar';
+  /*const url = 'http://localhost:8080/api/guardar';
   fetch(url,{method: 'POST',
         body: JSON.stringify(tablero), headers: new Headers({'Content-Type':'application/json'})
                                                     }).then(response => console.log(response));
-    //return sessionStorage.setItem(id, JSON.stringify(tablero));
+                                                    */
+    return sessionStorage.setItem(id, JSON.stringify(tablero));
 
 }//Model
 
@@ -203,18 +204,23 @@ function recuperar(id){
       container.map(e => tablero.push(new Casilla(e.i,e.j,e.paredes,e.visitado,e.camino,e.meta,e.actual)));
       util.generate = true;
       setFilasColumnas();
-
 /*
+
 
       const url = 'http://localhost:8080/api/cargar';
       fetch(url,{method: 'GET', headers: new Headers({'Content-Type':'application/json'})})
+
                                                     .then(tableroQ=>tableroQ.json())
+                                                    .then(e => console.log(e))
+                                                    //.then(tableroToParse => JSON.parse(tableroToParse))
+
                                                     .then(tab=>tab.map(e => tablero.push(new Casilla(e.i,e.j,e.paredes,e.visitado,e.camino,e.meta,e.actual))))
-                                                    .then(console.log(tablero))
-                                                    .catch(err=>console.log(err));
-                                                    util.generate = true;
-                                                    setFilasColumnas();
-                                                    */                          
+
+                                                    //.catch(err=>console.log(err));
+                                                    //util.generate = true;
+                                                    //setFilasColumnas();
+                                                    */
+
 }//Model
 
 function autocomplete(e){
