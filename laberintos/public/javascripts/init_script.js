@@ -32,7 +32,33 @@ class Controller extends p5{
 }
 
 let controller = new Controller();
+let worker = new Worker("./javascripts/worker.js");
 
+function startWorker(){
+    document.getElementById("generar").disabled     = true;
+    document.getElementById("setup").disabled       = true;
+    document.getElementById("recuperarBD").disabled = true;
+    document.getElementById("guardarBD").disabled   = true;
+    document.getElementById("recuperar").disabled   = true;
+    document.getElementById("guardar").disabled     = true;
+    document.getElementById("mySelect").disabled    = true;
+    document.getElementById("Filas").disabled       = true;
+    document.getElementById("Columnas").disabled    = true;
+    worker.postMessage("start");
+}
+
+function stopWorker(){
+  worker.terminate();
+  document.getElementById("generar").disabled     = false;
+  document.getElementById("setup").disabled       = false;
+  document.getElementById("recuperarBD").disabled = false;
+  document.getElementById("guardarBD").disabled   = false;
+  document.getElementById("recuperar").disabled   = false;
+  document.getElementById("guardar").disabled     = false;
+  document.getElementById("mySelect").disabled    = false;
+  document.getElementById("Filas").disabled       = false;
+  document.getElementById("Columnas").disabled    = false;
+}
 function setup(){
     let canvas = createCanvas(400,400);
     canvas.parent('canvas');
@@ -43,7 +69,7 @@ function draw(){
 
   if(util.generate == true){
     background('red');
-    tablero.forEach((e,i) => e.show());
+    tablero.forEach((e,i) => {startWorker(); e.show();});
 
     /*Metodo aparte*///Debe contactarse con el controller...
     crearLaberinto();
@@ -85,12 +111,7 @@ window.onload = () => {
   let btnRecupera = document.getElementById("recuperar");
   let btnGuarda = document.getElementById("guardar");
 
-  let radioGuardaOnline = document.getElementById("showOnline");
-  let radioGuardaLocal = document.getElementById("showLocal");
-
   let select = document.getElementById("mySelect");
-
-
 
   btn.onclick = e => toPromise(e).then(autocomplete)
                                  .then(intersecciones);
@@ -112,12 +133,10 @@ window.onload = () => {
 
   select.onchange = e => radios();
 
+  document.onkeydown = e => toPromise(e).then(movimiento(e))
+                                        .catch(e => log(e));
+
 
 }
 
 let alerta = (...args) => window.alert(...args);
-document.onkeydown = e =>{
-                     toPromise(e)
-                     .then(movimiento(e))
-                     .catch(e => log(e));
-}

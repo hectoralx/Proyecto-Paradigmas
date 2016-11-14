@@ -43,27 +43,26 @@ let router = express.Router();
 router.use((req, res, next) => {
   log('something is happening...!');
   next();
-})//create a route to access API with http://localhost/api/index.html
+})//create a route to access API with http://localhost:8080/index.html
 router.get('/index.html', (req, res) => res.render('index.html'));
 
 //domain building, with /api as root access
-app.use('/api', router);
+app.use('/', router);
 app.listen(port);
 log('REST-API listening at port ' + port);
 
-app.post('/api/guardar', function(req, res){
+app.post('/api/guardar', (req, res) => {
     tableroModel.remove().then(res=>log(res)).catch(err=>log(err));
     let objArray = req.body;
     let lTablero = new tableroModel({
-        casillas: objArray
+        casillas : objArray
     });
     lTablero.save().then(res.send('Guardado con éxito')).catch(err=>log(err));
 });
 
-app.get('/api/cargar', function(req, res){
+app.get('/api/cargar', (req, res) => {
     let query = tableroModel.findOne();
     let p = query.exec();
     log(p);
     p.then(data=>res.send(JSON.stringify(data.casillas))).catch(err=>log(err));
-
 });

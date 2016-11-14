@@ -43,7 +43,8 @@ function generar(){
   util.filas = controller.getFilas();
   util.columnas = controller.getColumnas();
   util.generate = (util.filas <= 40 && util.columnas <= 40)? true : false;
-  (util.generate == true)?crearTableroX(util.filas,util.columnas,0,0,tablero):alerta("Dimensiones muy grandes");
+  (util.generate == true) ? crearTableroX(util.filas,util.columnas,0,0,tablero)
+                          : alerta("Dimensiones muy grandes");
   if(tablero[0])
     tablero[0].actual = true;
   return true;
@@ -71,6 +72,8 @@ function crearLaberinto(){
 
           tablero.buscaActual().actual = false;
           util.stack.pop().actual = true;
+      }else{
+        stopWorker();
       }
 }
 
@@ -95,44 +98,44 @@ function removerParedes(a, b){
 
 function movimiento(e) {
  let key = (e.keyCode) ? e.keyCode : e.which;
-
  let p;
- // arriba
  if (key == 38 && tablero.buscaActual().moverArriba()) {
-     tablero.buscaActual().camino = true;
-     p = tablero[tablero.indices(tablero.buscaActual().i, tablero.buscaActual().j-1)];
-     tablero.buscaActual().actual = false;
-     p.actual = true;
- //derecha
- }else if (key == 39 && tablero.buscaActual().moverDerecha()) {
-     tablero.buscaActual().camino = true;
-     p = tablero[tablero.indices(tablero.buscaActual().i+1, tablero.buscaActual().j)];
-     tablero.buscaActual().actual=false;
-     p.actual = true;
- }
- //abajo
- else if (key == 40 && tablero.buscaActual().moverAbajo()) {
-     tablero.buscaActual().camino = true;
-     p = tablero[tablero.indices(tablero.buscaActual().i, tablero.buscaActual().j+1)];
-     tablero.buscaActual().actual = false;
-     p.actual = true;
- }
- //izquierda
- else if (key == 37 && tablero.buscaActual().moverIzquierda()) {
-    tablero.buscaActual().camino = true;
-    p = tablero[tablero.indices(tablero.buscaActual().i-1, tablero.buscaActual().j)];
-    tablero.buscaActual().actual = false;
-    p.actual = true;
- }
- else {
-   return false;
- }
+         tablero.buscaActual().camino = true;
+         p = tablero[tablero.indices(tablero.buscaActual().i, tablero.buscaActual().j-1)];
+         tablero.buscaActual().actual = false;
+         p.actual = true;
+     //derecha
+     }else if (key == 39 && tablero.buscaActual().moverDerecha()) {
+         tablero.buscaActual().camino = true;
+         p = tablero[tablero.indices(tablero.buscaActual().i+1, tablero.buscaActual().j)];
+         tablero.buscaActual().actual=false;
+         p.actual = true;
+     }
+     //abajo
+     else if (key == 40 && tablero.buscaActual().moverAbajo()) {
+         tablero.buscaActual().camino = true;
+         p = tablero[tablero.indices(tablero.buscaActual().i, tablero.buscaActual().j+1)];
+         tablero.buscaActual().actual = false;
+         p.actual = true;
+     }
+     //izquierda
+     else if (key == 37 && tablero.buscaActual().moverIzquierda()) {
+        tablero.buscaActual().camino = true;
+        p = tablero[tablero.indices(tablero.buscaActual().i-1, tablero.buscaActual().j)];
+        tablero.buscaActual().actual = false;
+        p.actual = true;
+     }
+     else {
+       return false;
+     }
 
- if((tablero.buscaActual().actual == tablero[tablero.length-1].actual)){
-   let audio = new Audio('/sounds/win.mp3');
-   audio.play();
-   //alerta("Felicidades, ganaste!");
- }
+     if((tablero.buscaActual().actual == tablero[tablero.length-1].actual)){
+       let audio = new Audio('/sounds/win.mp3');
+       stopWorker();
+       audio.play();
+       //alerta("Felicidades, ganaste!");
+
+      }
 }
 
 function guardar(id, tablero){
