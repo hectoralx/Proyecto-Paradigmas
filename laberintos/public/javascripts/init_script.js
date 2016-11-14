@@ -42,8 +42,6 @@ function startWorker(){
     document.getElementById("recuperar").disabled   = true;
     document.getElementById("guardar").disabled     = true;
     document.getElementById("mySelect").disabled    = true;
-    document.getElementById("Filas").disabled       = true;
-    document.getElementById("Columnas").disabled    = true;
     worker.postMessage("start");
 }
 
@@ -56,8 +54,6 @@ function stopWorker(){
   document.getElementById("recuperar").disabled   = false;
   document.getElementById("guardar").disabled     = false;
   document.getElementById("mySelect").disabled    = false;
-  document.getElementById("Filas").disabled       = false;
-  document.getElementById("Columnas").disabled    = false;
 }
 function setup(){
     let canvas = createCanvas(400,400);
